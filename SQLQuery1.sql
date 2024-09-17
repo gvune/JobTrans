@@ -40,3 +40,11 @@ CREATE TABLE Job_Greetings (
     FOREIGN KEY (job_id) REFERENCES Job(job_id)
 );
 
+ALTER TABLE users
+ADD CONSTRAINT chk_role CHECK (role IN ('freelancer', 'employer', 'admin'));
+GO
+
+-- Thêm constraint để giới hạn giá trị của cột status
+ALTER TABLE users
+ADD CONSTRAINT chk_status CHECK (status IN ('active', 'suspended', 'deactivated'));
+GO
