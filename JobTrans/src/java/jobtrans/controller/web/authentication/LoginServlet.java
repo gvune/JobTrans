@@ -124,6 +124,8 @@ public class LoginServlet extends HttpServlet {
             session.setAttribute("avatarUrl", u.getAvatarUrl());
             response.getWriter().print(mail);
             response.getWriter().print(u);
+            session.setAttribute("UserSession", user);
+            response.sendRedirect("edit_Profile.jsp");
             request.getRequestDispatcher("index.jsp").forward(request, response);
         } else {
             request.setAttribute("msg", "Authenticate failure!");

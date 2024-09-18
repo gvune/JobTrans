@@ -181,13 +181,60 @@ public class UserDAO {
         }
         return check;
     }
+    //
+    public  boolean editProfile(User user) {
+       DBConnection db = DBConnection.getInstance(); 
+       
+    boolean isUpdated = false;
+    try  {
+        Connection con = db.openConnection();
+        // SQL query to update the user's profile
+        String query = "UPDATE Users SET user_name = ?, role = ?, description = ?, specification = ?, address = ? WHERE user_id = ?";
+        
+        PreparedStatement stmt = con.prepareStatement(query);
+        
+        // Ensure all parameters are properly set
+        if (user.getUserName() == null || user.getUserName().isEmpty()) {
+            throw new IllegalArgumentException("User name is missing!");
+        }
+        if (user.getRole() == null || user.getRole().isEmpty()) {
+            throw new IllegalArgumentException("Role is missing!");
+        }
+        if (user.getUserId() == 0) {
+            throw new IllegalArgumentException("User ID is missing or invalid!");
+        }
+
+        // Set the parameters based on the User object
+        stmt.setString(1, user.getUserName());         // user_name
+        stmt.setString(2, user.getRole());              // role
+        stmt.setString(3, user.getDescription());       // description
+        stmt.setString(4, user.getSpecification());     // specification
+        stmt.setString(5, user.getAddress());           // address
+        stmt.setInt(6, user.getUserId());              // user_id (for the WHERE condition)
+
+        // Execute the update query
+        int rowsAffected = stmt.executeUpdate();
+        
+        if (rowsAffected > 0) {
+            isUpdated = true;  // Update was successful
+        }
+        
+        con.close();
+    } catch (IllegalArgumentException e) {
+        System.out.println("Error in input parameters: " + e.getMessage());
+    } catch (Exception e) {
+        Logger.getLogger(User.class.getName()).log(Level.SEVERE, null, e);
+    }
+    return isUpdated;  // Return true if the profile was updated, false otherwise
+}
 
     public static void main(String[] args) {
         UserDAO u = new UserDAO();
-
+        
 //        System.out.println(u.getAllUSer());
 //        System.out.println(u.checkExistEmail("vtmyduyen3103@gmail.com"));
 //        User user = new User("Duyên", "duyenvtmde180048@fpt.edu.vn", "Google", "12221", "12", true);
 //        u.addUserByLoginGoogle(user);
+        
     }
 }
